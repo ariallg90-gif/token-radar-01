@@ -201,8 +201,8 @@ export function impliedValue(
   const growthPct = Math.min(model.growth_cap, Math.max(model.growth_floor, rawGrowth));
   const growthMult = 1 + (growthPct / 100) * model.growth_weight;
   const ageForModel = age ?? model.unknown_age_days;
-  const maturityMult =
-    model.maturity_floor + (Math.min(Math.max(ageForModel, 0), model.maturity_days) / model.maturity_days) * model.maturity_range;
+  const clampedAge = Math.min(Math.max(ageForModel, 0), model.maturity_days);
+  const maturityMult = model.maturity_floor + (clampedAge / model.maturity_days) * model.maturity_range;
   const extraChains = Math.max(0, Math.min(protocol.chains.length - 1, model.breadth_max_chains));
   const breadthMult = 1 + extraChains * model.breadth_per_chain;
   const recencyMult = age !== null && age < model.recency_days ? model.recency_factor : 1;
